@@ -1,7 +1,33 @@
-- name: Configure Kaggle credentials
-  run: |
-    mkdir -p ~/.kaggle
-    cat > ~/.kaggle/kaggle.json <<EOF
-    {"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}
-    EOF
-    chmod 600 ~/.kaggle/kaggle.json
+name: Deploy to Kaggle
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-kaggle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Kaggle CLI
+        run: pip install kaggle
+
+      - name: Configure Kaggle credentials
+        run: |
+          mkdir -p ~/.kaggle
+          cat > ~/.kaggle/kaggle.json <<EOF
+          {"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}
+          EOF
+          chmod 600 ~/.kaggle/kaggle.json
+
+      - name: Push notebook to Kaggle
+        run: kaggle kernels push -p kaggle-notebook
