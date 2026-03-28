@@ -19,38 +19,15 @@ jobs:
           python-version: "3.11"
 
       - name: Install Kaggle CLI
-        run: pip install -U kaggle
+        run: pip install kaggle
 
       - name: Configure Kaggle credentials
         run: |
           mkdir -p ~/.kaggle
-          printf '%s' '{"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
+          cat > ~/.kaggle/kaggle.json <<EOF
+          {"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}
+          EOF
           chmod 600 ~/.kaggle/kaggle.json
-
-      - name: Debug Kaggle auth and metadata
-        run: |
-          echo "=== ~/.kaggle ==="
-          ls -la ~/.kaggle
-
-          echo "=== Validate kaggle.json ==="
-          python - <<'PY'
-          import json
-          with open('/home/runner/.kaggle/kaggle.json') as f:
-              data = json.load(f)
-          print("username:", data.get("username"))
-          print("key length:", len(data.get("key", "")))
-          PY
-
-          echo "=== kaggle-notebook ==="
-          ls -la kaggle-notebook
-
-          echo "=== Validate kernel-metadata.json ==="
-          python - <<'PY'
-          import json
-          with open('kaggle-notebook/kernel-metadata.json') as f:
-              data = json.load(f)
-          print(data)
-          PY
 
       - name: Push notebook to Kaggle
         run: kaggle kernels push -p kaggle-notebook
