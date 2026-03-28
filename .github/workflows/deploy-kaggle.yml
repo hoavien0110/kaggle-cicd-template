@@ -27,9 +27,13 @@ jobs:
           printf '%s' '{"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
           chmod 600 ~/.kaggle/kaggle.json
 
-      - name: Save commit info
+      # 🔥 Inject commit vào notebook (QUAN TRỌNG)
+      - name: Inject commit into notebook
         run: |
-          printf '%s' '${{ github.sha }}' > kaggle-notebook/commit.txt
+          COMMIT=${GITHUB_SHA::7}
+          sed -i "s/__COMMIT__/$COMMIT/g" kaggle-notebook/hello_world.ipynb
+        env:
+          GITHUB_SHA: ${{ github.sha }}
 
       - name: Push notebook to Kaggle
         run: kaggle kernels push -p kaggle-notebook
