@@ -19,15 +19,22 @@ jobs:
           python-version: "3.11"
 
       - name: Install Kaggle CLI
-        run: pip install kaggle
+        run: pip install -U kaggle
 
       - name: Configure Kaggle credentials
         run: |
           mkdir -p ~/.kaggle
-          cat > ~/.kaggle/kaggle.json <<EOF
-          {"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}
-          EOF
+          printf '%s' '{"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
           chmod 600 ~/.kaggle/kaggle.json
 
+      # 🔥 Inject commit vào title
+      - name: Inject commit into metadata title
+        run: |
+          COMMIT=${{ github.sha }}
+          sed -i "s/hello-world-auto-deploy/hello-world-${COMMIT}/g" kaggle-notebook/kernel-metadata.json
+
+      # 🚀 Push + truyền commit vào env
       - name: Push notebook to Kaggle
+        env:
+          GIT_COMMIT: ${{ github.sha }}
         run: kaggle kernels push -p kaggle-notebook
