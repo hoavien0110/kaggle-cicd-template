@@ -19,7 +19,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Kaggle CLI
-        run: pip install kaggle
+        run: pip install -U kaggle
 
       - name: Configure Kaggle credentials
         run: |
