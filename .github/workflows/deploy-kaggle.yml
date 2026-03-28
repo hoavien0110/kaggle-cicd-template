@@ -1,0 +1,7 @@
+- name: Configure Kaggle credentials
+  run: |
+    mkdir -p ~/.kaggle
+    cat > ~/.kaggle/kaggle.json <<EOF
+    {"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}
+    EOF
+    chmod 600 ~/.kaggle/kaggle.json
