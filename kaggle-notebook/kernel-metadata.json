@@ -9,7 +9,8 @@
   "enable_internet": false,
   "dataset_sources": [
     "heptapod/titanic",
-    "nalisha/job-salary-prediction-dataset"
+    "nalisha/job-salary-prediction-dataset",
+    "grandmaster07/student-exam-performance-dataset-analysis"
   ],
   "competition_sources": [],
   "kernel_sources": []
