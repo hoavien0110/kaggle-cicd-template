@@ -8,7 +8,8 @@
   "enable_gpu": false,
   "enable_internet": false,
   "dataset_sources": [
-    "heptapod/titanic"
+    "heptapod/titanic",
+    "nalisha/job-salary-prediction-dataset"
   ],
   "competition_sources": [],
   "kernel_sources": []
